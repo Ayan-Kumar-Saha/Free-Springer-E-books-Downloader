@@ -2,6 +2,8 @@
 
 A scraper for downloading free Springer e-books.
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
 ### Features
 * A collection of 400+ e-books from Springer
 * No browser required
@@ -18,8 +20,6 @@ A scraper for downloading free Springer e-books.
 * [Environment setup](#environment-setup)
 
 * [Run E-books Downloader](#run-e-books-downloader)
-
-* [Usage](#usage)
 
 * [Output](#output)
 
@@ -73,20 +73,6 @@ Run the downloader using,
 ~$ python download_ebooks.py
 ```
 
-## Usage
-
-Once the downloader starts, a list of e-book packages will be displayed
-
-<img src="images/user_interface.png">
-
-Enter **1** to download all the e-books available from all the packages, download should be started automatically
-
-<img src="images/user_choice_1.png">
-
-Enter **2** to download e-books from one or more than one specific packages. Enter the names of the packages as same the list that will be displayed (names are case sensitive). Put comma(,) between the names if more than one packages are there. Again download will be started automatically
-
-<img src="images/user_choice_2.png">
-
 ## Output
 
 Once completed, check your current directory for the e-books
@@ -103,7 +89,3 @@ Once completed, check your current directory for the e-books
 **Ayan Kumar Saha**
 * [GitHub](https://github.com/Ayan-Kumar-Saha)
 * [LinkedIn](https://www.linkedin.com/in/ayankumarsaha/)
-
-## License
-
-Copyright © 2020 [Ayan Kumar Saha](https://github.com/Ayan-Kumar-Saha) Released under the [MIT](https://choosealicense.com/licenses/mit/) license.
