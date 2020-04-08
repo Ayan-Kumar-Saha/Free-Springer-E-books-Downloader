@@ -82,7 +82,7 @@ def download_books(books):
         if not os.path.exists(directory_path):
             os.mkdir(directory_path)
 
-        print('---Downloading E-books from {}--'.format(package_name))
+        print('---Downloading E-books from {}---'.format(package_name))
 
         for book_title in books[package_name]:
 

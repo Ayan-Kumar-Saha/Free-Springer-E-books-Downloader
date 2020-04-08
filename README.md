@@ -21,6 +21,8 @@ A scraper for downloading free Springer e-books.
 
 * [Usage](#usage)
 
+* [Output](#output)
+
 * [Build with](#build-with)
 
 * [Author](#author)
