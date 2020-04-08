@@ -2,6 +2,13 @@
 
 A scraper for downloading free Springer e-books.
 
+### Features
+* A collection of 400+ e-books from Springer
+* No browser required
+* No need to manually download and organize
+* No re-downloads. Start and stop the downloader anytime, it will download the books from the last checkpoint
+* Absolutely hassle-free, run the downloader and wait until it finishes
+
 ## Table of Content
 
 * [Prerequisites](#prerequisites)
@@ -66,8 +73,23 @@ Run the downloader using,
 
 ## Usage
 
-Choose all the packages or the required packages that you want to download. Once completed, package-wise folders will be created on the current directory containing all the e-books available in that package.
+Once the downloader starts, a list of e-book packages will be displayed
 
+<img src="images/user_interface.png">
+
+Enter **1** to download all the e-books available from all the packages, download should be started automatically
+
+<img src="images/user_choice_1.png">
+
+Enter **2** to download e-books from one or more than one specific packages. Enter the names of the packages as same the list that will be displayed (names are case sensitive). Put comma(,) between the names if more than one packages are there. Again download will be started automatically
+
+<img src="images/user_choice_2.png">
+
+## Output
+
+Once completed, check your current directory for the e-books
+
+<img src="images/output.png">
 
 ## Build with
 

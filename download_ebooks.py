@@ -2,7 +2,6 @@ from bs4 import BeautifulSoup
 import requests
 import os
 import time
-import pprint
 
 URL = 'https://docs.google.com/spreadsheets/d/1HzdumNltTj2SHmCv3SRdoub8SvpIEn75fa4Q23x0keU/htmlview#gid=793911758'
 
@@ -18,14 +17,14 @@ book_shelf = soup.find_all('tr')
 
 def get_user_choice(books):
 
-    print('---Welcome to Free Springer Book Store---')
-    print('-----------------------------------------')
-    print('******* Available E-Book Packages *******')
-    print('-----------------------------------------')
+    print('---Welcome to Free Springer E-Books Store---')
+    print('--------------------------------------------')
+    print('******** Available E-Book Packages ********')
+    print('--------------------------------------------')
     
 
     for package_name in books:
-        print('| {} '.format(package_name), end = '\n\n')
+        print('| {} '.format(package_name), end = '\n')
 
     while True:
         print('\nPress 1: Download E-Books from ALL packages')
@@ -43,6 +42,8 @@ def get_user_choice(books):
 
 
 def collect_books_data():
+
+    global book_shelf
 
     books = dict()
 
@@ -72,12 +73,16 @@ def download_books(books):
 
     global pdf_base_URL
 
+    print('\n\n----- *** DOWNLOADING STARTED *** --------\n\n')
+
     for package_name in books:
 
         directory_path = os.path.join(os.getcwd(), package_name)
 
         if not os.path.exists(directory_path):
             os.mkdir(directory_path)
+
+        print('---Downloading E-books from {}--'.format(package_name))
 
         for book_title in books[package_name]:
 
@@ -88,7 +93,7 @@ def download_books(books):
 
             file_path = os.path.join(directory_path, file_name)
 
-            print('\nChecking STATUS for {} -> '.format(book_title), end = '')
+            print('\nChecking STATUS for "{}" -> '.format(book_title), end = '')
             time.sleep(1)
 
             try :
@@ -98,7 +103,7 @@ def download_books(books):
                     print("NOT FOUND\n")
                     time.sleep(1)
 
-                    print('Downloading {}...'.format(book_title))
+                    print('Downloading "{}"...'.format(book_title))
 
                     download_site_response = requests.get(books[package_name][book_title]['Book Download Link'])
                     download_site_response.raise_for_status()
@@ -117,7 +122,7 @@ def download_books(books):
                         for chunk in pdf_response.iter_content(100000):
                             pdf_file.write(chunk)
 
-                    print('{} DOWNLOAD STATUS: OK!!'.format(book_title))
+                    print('"{}" DOWNLOAD STATUS: OK!!'.format(book_title))
 
                 else:
 
@@ -126,7 +131,7 @@ def download_books(books):
 
             except Exception as e:
 
-                print('\nSome ERROR occurred while downloading {}'.format(book_title))
+                print('\nSome ERROR occurred while downloading "{}"'.format(book_title))
 
 def main():
 
@@ -159,7 +164,7 @@ def main():
 
         download_books(books2)
 
-    print('Download complete successfully!!')
+    print('\n-----*** DOWNLOADING COMPLETED ***--------\n')
 
 main()
 
