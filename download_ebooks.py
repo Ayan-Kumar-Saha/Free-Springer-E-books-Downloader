@@ -17,7 +17,7 @@ book_shelf = soup.find_all('tr')
 
 def get_user_choice(books):
 
-    print('---Welcome to Free Springer E-Books Store---')
+    print('\n\n---Welcome to Free Springer E-Books Store---')
     print('--------------------------------------------')
     print('******** Available E-Book Packages ********')
     print('--------------------------------------------')
@@ -27,13 +27,14 @@ def get_user_choice(books):
         print('| {} '.format(package_name), end = '\n')
 
     while True:
-        print('\nPress 1: Download E-Books from ALL packages')
-        print('Press 2: Download E-Books from SPECIFIC packages')
+        print('\nPress 1: View the list of available E-books by package names')
+        print('Press 2: Download E-books from ALL packages')
+        print('Press 3: Download E-books from SPECIFIC packages')
         print('Press 0: Quit')
 
         choice = int(input('\nEnter your choice: '))
 
-        if choice not in (1, 2, 0):
+        if choice not in (1, 2, 3, 0):
             print('\nWrong choice!! Enter again!!\n')
         else:
             break
@@ -73,7 +74,7 @@ def download_books(books):
 
     global pdf_base_URL
 
-    print('\n\n----- *** DOWNLOADING STARTED *** --------\n\n')
+    print('\n\n-------- *** DOWNLOADING STARTED *** --------\n\n')
 
     for package_name in books:
 
@@ -93,7 +94,7 @@ def download_books(books):
 
             file_path = os.path.join(directory_path, file_name)
 
-            print('\nChecking STATUS for "{}" -> '.format(book_title), end = '')
+            print('\nSearching "{}" in the current directory -> '.format(book_title), end = '')
             time.sleep(1)
 
             try :
@@ -133,39 +134,67 @@ def download_books(books):
 
                 print('\nSome ERROR occurred while downloading "{}"'.format(book_title))
 
-def main():
-
-    books = collect_books_data()
-
-    choice = get_user_choice(books)
-
-    if choice == 0:   
-        exit()
-
-    elif choice == 1:
-        download_books(books)
-
-    else: 
-
-        print("\n* Enter package names carefully!! Names are CASE SENSITIVE!!")
-        print("* PUT Comma(,) between in case of multiple package names !!")
-        packages = input('\nEnter package name(s): ')
-
-        packages = packages.split(',')
-
-        for i in range(len(packages)):
-            packages[i] = packages[i].strip()
-
-        books2 = dict()
-
-        for package_name in packages:
-
-            books2[package_name] = books[package_name]
-
-        download_books(books2)
-
     print('\n-----*** DOWNLOADING COMPLETED ***--------\n')
 
+
+def get_packages_data():
+
+    print("\n* Enter package names carefully!! Names are CASE SENSITIVE!!")
+    print("* PUT Comma(,) between in case of multiple package names !!")
+    packages = input('\nEnter package name(s): ')
+
+    packages = packages.split(',')
+
+    for i in range(len(packages)):
+        packages[i] = packages[i].strip()
+
+    return packages
+
+
+def display_package_booklist(books, packages):
+
+    for package in packages:
+
+        index = 1
+
+        print('\n\nShowing booklist for {}'.format(package))
+        print('----------------------------------------------')
+
+        for book_title in books[package]:
+            print('| {}. {}   |by|   {}'.format(index, book_title, books[package][book_title]['Author']))
+            index += 1
+
+
+def main():
+
+    while True:
+
+        books = collect_books_data()
+
+        choice = get_user_choice(books)
+
+        if choice == 0: 
+            print('\nThank you !! Please give a star to this repository on GitHub !!')  
+            exit()
+
+        elif choice == 1:
+            packages = get_packages_data()
+            display_package_booklist(books, packages)        
+
+        elif choice == 2:
+            download_books(books)
+
+        else: 
+            packages = get_packages_data()
+
+            books2 = dict()
+
+            for package_name in packages:
+                books2[package_name] = books[package_name]
+
+            download_books(books2)
+
+    
 main()
 
 
