@@ -28,13 +28,14 @@ def get_user_choice(books):
 
     while True:
         print('\nPress 1: View the list of available E-books by package names')
-        print('Press 2: Download E-books from ALL packages')
-        print('Press 3: Download E-books from SPECIFIC packages')
+        print('Press 2: Download specific e-books')
+        print('Press 3: Download all e-books from SPECIFIC packages')
+        print('Press 4: Download all e-books from ALL packages')
         print('Press 0: Quit')
 
         choice = int(input('\nEnter your choice: '))
 
-        if choice not in (1, 2, 3, 0):
+        if choice not in (1, 2, 3, 4, 0):
             print('\nWrong choice!! Enter again!!\n')
         else:
             break
@@ -68,7 +69,16 @@ def collect_books_data():
                 }
 
     return books
-    
+
+def get_file_name(books, package_name, book_title):
+
+    file_name = book_title + '_by_' + books[package_name][book_title]['Author'] + '.pdf'
+            
+    if len(file_name.split('/')) > 1:
+        file_name = ' or '.join(file_name.split('/'))
+
+    return file_name
+
 
 def download_books(books):
 
@@ -87,10 +97,7 @@ def download_books(books):
 
         for book_title in books[package_name]:
 
-            file_name = book_title + '_by_' + books[package_name][book_title]['Author'] + '.pdf'
-            
-            if len(file_name.split('/')) > 1:
-                        file_name = ' or '.join(file_name.split('/'))
+            file_name = get_file_name(books, package_name, book_title)
 
             file_path = os.path.join(directory_path, file_name)
 
@@ -134,7 +141,7 @@ def download_books(books):
 
                 print('\nSome ERROR occurred while downloading "{}"'.format(book_title))
 
-    print('\n-----*** DOWNLOADING COMPLETED ***--------\n')
+    print('\n\n-----*** DOWNLOADING COMPLETED ***--------\n')
 
 
 def get_packages_data():
@@ -165,6 +172,42 @@ def display_package_booklist(books, packages):
             index += 1
 
 
+def get_specific_book_data(books):
+
+
+    print('\nEnter details CAREFULLY !! Every details is CASE-SENSITIVE !!')
+
+    while True:
+        package_name = input('\nEnter the package name where the book belongs: ')
+        if package_name not in books:
+            print('\nWrong package name!! Check spelling/letter case/name properly before entering !!')
+        else:
+            break
+
+    while True:
+        book_title = input('\nEnter the book title: ')
+        if book_title not in books[package_name]:
+            print('\nWrong book title!! Check spelling/letter case/name properly before entering !!')
+        else:
+            break
+
+    while True:
+        author_name = input('\nEnter the name of the author(s) of the book: ')
+        if author_name == books[package_name][book_title]:
+            print('\nWrong author name!! Check spelling/letter case/name properly before entering !!')
+        else:
+            break
+    
+    return {
+        package_name: {
+            book_title: {
+                'Author': author_name,
+                'Book Download Link': books[package_name][book_title]['Book Download Link']
+            }
+        }
+    }
+
+
 def main():
 
     while True:
@@ -180,19 +223,23 @@ def main():
         elif choice == 1:
             packages = get_packages_data()
             display_package_booklist(books, packages)        
-
+        
         elif choice == 2:
-            download_books(books)
+            single_book = get_specific_book_data(books)
+            download_books(single_book)
 
-        else: 
+        elif choice == 3:
             packages = get_packages_data()
 
             books2 = dict()
 
             for package_name in packages:
-                books2[package_name] = books[package_name]
+                books3[package_name] = books[package_name]
 
-            download_books(books2)
+            download_books(books3)
+            
+        else: 
+            download_books(books)
 
     
 main()
