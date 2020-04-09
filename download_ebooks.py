@@ -70,6 +70,7 @@ def collect_books_data():
 
     return books
 
+
 def get_file_name(books, package_name, book_title):
 
     file_name = book_title + '_by_' + books[package_name][book_title]['Author'] + '.pdf'
@@ -174,7 +175,6 @@ def display_package_booklist(books, packages):
 
 def get_specific_book_data(books):
 
-
     print('\nEnter details CAREFULLY !! Every details is CASE-SENSITIVE !!')
 
     while True:
@@ -234,9 +234,9 @@ def main():
             books2 = dict()
 
             for package_name in packages:
-                books3[package_name] = books[package_name]
+                books2[package_name] = books[package_name]
 
-            download_books(books3)
+            download_books(books2)
             
         else: 
             download_books(books)
