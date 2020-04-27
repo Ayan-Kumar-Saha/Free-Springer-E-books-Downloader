@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 import os
 import time
+from clint.textui import progress
 
 URL = 'https://docs.google.com/spreadsheets/d/1HzdumNltTj2SHmCv3SRdoub8SvpIEn75fa4Q23x0keU/htmlview#gid=793911758'
 
@@ -123,15 +124,19 @@ def download_books(books):
 
                     pdf_query_URL = links[0]['href']
 
-                    pdf_response = requests.get(pdf_base_URL + pdf_query_URL, 'lxml')
+                    pdf_response = requests.get(pdf_base_URL + pdf_query_URL, stream = True)
                     pdf_response.raise_for_status()
 
                     with open(file_path, 'wb') as pdf_file:
-                        
-                        for chunk in pdf_response.iter_content(100000):
-                            pdf_file.write(chunk)
 
-                    print('"{}" DOWNLOAD STATUS: OK!!'.format(book_title))
+                        total_length = int(pdf_response.headers.get('content-length'))
+                        
+                        for chunk in progress.bar(pdf_response.iter_content(chunk_size=100000), expected_size=(total_length/100000) + 1):
+                            if chunk:
+                                pdf_file.write(chunk)
+                                pdf_file.flush()
+
+                    print('\n"{}" DOWNLOAD STATUS: OK!!'.format(book_title))
 
                 else:
 
