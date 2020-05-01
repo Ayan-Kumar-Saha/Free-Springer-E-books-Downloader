@@ -95,7 +95,7 @@ def download_books(books):
         if not os.path.exists(directory_path):
             os.mkdir(directory_path)
 
-        print('---Downloading E-books from {}---'.format(package_name))
+        print(f'---Downloading E-books from {package_name}---')
 
         for book_title in books[package_name]:
 
@@ -103,49 +103,72 @@ def download_books(books):
 
             file_path = os.path.join(directory_path, file_name)
 
-            print('\nSearching "{}" in the current directory -> '.format(book_title), end = '')
-            time.sleep(1)
+            print(f'\nSearching "{book_title}" in the current directory -> ', end = '')
 
             try :
 
+                download_site_response = requests.get(books[package_name][book_title]['Book Download Link'])
+                download_site_response.raise_for_status()
+
+                soup2 = BeautifulSoup(download_site_response.content, 'lxml')
+
+                links = soup2.select('a[data-track-action="Book download - pdf"]')
+
+                pdf_query_URL = links[0]['href']
+
+                pdf_response = requests.get(pdf_base_URL + pdf_query_URL, stream = True)
+                pdf_response.raise_for_status()
+
+                total_length = int(pdf_response.headers.get('content-length'))
+
                 if not os.path.exists(file_path):
 
-                    print("NOT FOUND\n")
+                    print("NOT FOUND")
                     time.sleep(1)
 
-                    print('Downloading "{}"...'.format(book_title))
-
-                    download_site_response = requests.get(books[package_name][book_title]['Book Download Link'])
-                    download_site_response.raise_for_status()
-
-                    soup2 = BeautifulSoup(download_site_response.content, 'lxml')
-
-                    links = soup2.select('a[data-track-action="Book download - pdf"]')
-
-                    pdf_query_URL = links[0]['href']
-
-                    pdf_response = requests.get(pdf_base_URL + pdf_query_URL, stream = True)
-                    pdf_response.raise_for_status()
+                    print(f'\nDownloading "{book_title}"...\n')
 
                     with open(file_path, 'wb') as pdf_file:
-
-                        total_length = int(pdf_response.headers.get('content-length'))
-                        
+      
                         for chunk in progress.bar(pdf_response.iter_content(chunk_size=100000), expected_size=(total_length/100000) + 1):
                             if chunk:
                                 pdf_file.write(chunk)
                                 pdf_file.flush()
 
-                    print('\n"{}" DOWNLOAD STATUS: OK!!'.format(book_title))
+                    print(f'\n"{book_title}" DOWNLOAD STATUS: OK!!\n')
 
                 else:
 
-                    print('FOUND\n')
-                    time.sleep(1)
+                    file_size = os.stat(f'{file_path}')[6]
 
-            except Exception as e:
+                    if file_size != total_length:
 
-                print('\nSome ERROR occurred while downloading "{}"'.format(book_title))
+                        print('INCOMPLETE/CURRUPTED FILE!')
+
+                        print(f'\n"Re-downloding {book_title}"...\n')
+
+                        with open(file_path, 'wb') as pdf_file:
+      
+                            for chunk in progress.bar(pdf_response.iter_content(chunk_size=100000), expected_size=(total_length/100000) + 1):
+                                if chunk:
+                                    pdf_file.write(chunk)
+                                    pdf_file.flush()
+
+                        print(f'\n"{book_title}" DOWNLOAD STATUS: OK!!\n')
+
+                    else:
+
+                        print('FOUND\n')
+                        time.sleep(1)
+
+            except:
+
+                print('Some ERROR occurred')
+                print('\nPOSSIBLE CAUSES: ')
+                print('------------------------')
+                print('* The book is not free any more')
+                print('* The download link is changed or broken')
+                print('* Source server is down')
 
     print('\n\n-----*** DOWNLOADING COMPLETED ***--------\n')
 
