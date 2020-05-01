@@ -27,8 +27,6 @@ A scraper for downloading free Springer e-books.
 
 * [Author](#author)
 
-* [License](#license)
-
 ## Prerequisites
 
 * **Python 3** and **pip**  
